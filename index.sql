@@ -1,4 +1,4 @@
--- # MySQL performance(inner join v.s. subquery)
+ -- # MySQL performance(inner join v.s. subquery)
 
 -- テーブル users を作成
 create table users (
@@ -46,17 +46,19 @@ INSERT INTO reward (id, user_id, reward, created) values (8, 5, 1200, 20190412);
 
 -- 要件３
 -- 内部結合
-select b.user_id, a.name, b.reward, b.created from users a, reward b where a.user_id = b.user_id;
+-- select b.user_id, a.name, b.reward, b.created from users a, reward b where a.user_id = b.user_id;
+-- select b.user_id, a.name, b.reward, from users a right inner join reward b on a.user_id = b.user_id;
 
-select b.user_id, a.name, sum(reward) from users a, reward b where a.user_id = b.user_id and b.user_id = 1 and created >= 20190101;
-select b.user_id, a.name, sum(reward) from users a, reward b where a.user_id = b.user_id and b.user_id = 2 and created >= 20190101;
-select b.user_id, a.name, sum(reward) from users a, reward b where a.user_id = b.user_id and b.user_id = 3 and created >= 20190101;
-select b.user_id, a.name, sum(reward) from users a, reward b where a.user_id = b.user_id and b.user_id = 4 and created >= 20190101;
-select b.user_id, a.name, sum(reward) from users a, reward b where a.user_id = b.user_id and b.user_id = 5 and created >= 20190101;
+select a.user_id, a.name, ifnull(sum(reward), 0) from reward b right outer join users a on b.user_id = a.user_id where b.user_id = 1 and created >= 20190101;
+select a.user_id, a.name, ifnull(sum(reward), 0) from reward b right outer join users a on b.user_id = a.user_id where b.user_id = 2 and created >= 20190101;
+select a.user_id, a.name, ifnull(sum(reward), 0) from reward b right outer join users a on b.user_id = a.user_id where b.user_id = 3 and created >= 20190101;
+select a.user_id, a.name, ifnull(sum(reward), 0) from reward b right outer join users a on b.user_id = a.user_id where b.user_id = 4 and created >= 20190101;
+select a.user_id, a.name, ifnull(sum(reward), 0) from reward b right outer join users a on b.user_id = a.user_id where b.user_id = 5 and created >= 20190101;
 
 -- select user_id, sum(reward) from reward where user_id = 1 and created >= 20190101;
 -- select user_id, sum(reward) from reward where user_id = 2;
 -- select user_id, sum(reward) from reward where user_id = 3;
 -- select user_id, sum(reward) from reward where user_id = 4;
 -- select user_id, sum(reward) from reward where user_id = 5;
+
 
